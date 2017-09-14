@@ -1,0 +1,161 @@
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+import javax.swing.JOptionPane;
+
+public class Cliente extends Thread {
+
+	private Socket servidor;
+	
+	private String mensagem;
+	
+	public Cliente(Socket servidor){
+		this.servidor = servidor;
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		try
+		{			
+			Socket servidor = new Socket("localhost", 10000);
+			
+			
+			
+			Thread escuta = new Cliente(servidor);
+			escuta.start();
+			
+//			Scanner leitor = new Scanner(System.in);
+//			
+//			PrintStream saida = new PrintStream(servidor.getOutputStream());
+//			
+//			while(leitor.hasNextLine())
+//			{
+//				String mensagem = leitor.nextLine();
+//				
+//				System.out.println("Dado enviado: " + mensagem);
+//				saida.println(mensagem);
+//				
+//				
+//			}		
+		}
+		catch(IOException e)
+		{
+			//e.getMessage();
+		}
+	}
+
+	public void run()
+	{
+		try
+		{
+			Scanner entrada = new Scanner(this.servidor.getInputStream());
+			
+			JanelaLogin j = new JanelaLogin(servidor);
+			TelaCadastro cadastro = new TelaCadastro(servidor);
+			Cartela c = null;
+			AguardandoJogo aj = null;
+			JogoIniciado ji = null;
+			cadastro.setVisible(false);
+		
+			while(entrada.hasNextLine())
+			{
+				mensagem = entrada.nextLine();
+//				System.out.println("Dados Recebidos: " + mensagem);
+				
+				if (mensagem.equals("iniciarJogo"))
+				{
+					c = new Cartela(entrada.nextLine(), servidor);
+					aj = new AguardandoJogo(servidor);
+					aj.setVisible(false);
+					
+					j.setVisible(false);
+					
+//					try 
+//					{
+//						PrintStream saida = new PrintStream(servidor.getOutputStream());
+//						saida.println("jogar");			
+//					} 
+//					catch (IOException e1) 
+//					{
+//						e1.getMessage();
+//					}
+
+				}
+				else if (mensagem.equals("AC")){
+					
+					cadastro.setVisible(true);
+					j.setVisible(false);
+				}
+				else if (mensagem.equals("SC")){
+					
+					cadastro.setVisible(false);					
+					j.setVisible(true);
+				}
+				else if (mensagem.equals("JaTemCadastro"))
+				{
+					JOptionPane.showMessageDialog(null,"Usuário já cadastrado" , null, 0);
+				}
+				else if (mensagem.equals("cadastrou"))
+				{
+					JOptionPane.showMessageDialog(null,"Cadastro efetuado com sucesso" , null, JOptionPane.INFORMATION_MESSAGE);
+					cadastro.setVisible(false);					
+					j.setVisible(true);
+				}
+				else if(mensagem.equals("NL"))
+				{
+					JOptionPane.showMessageDialog(null,"Usuário ou Senha incorreto" , null, 0);
+					//System.out.println("Dado recebido: " + mensagem);	
+				}
+				else if (mensagem.equals("E")){
+					JOptionPane.showMessageDialog(null, entrada.nextLine() , null, 0);
+				}
+				else if (mensagem.equals("FJ")){
+					JOptionPane.showMessageDialog(null,"Jogo terminou, obrigado por jogar!" , null, JOptionPane.INFORMATION_MESSAGE);
+					
+					aj.setVisible(true);
+					c.setVisible(false);
+				}
+				else if (mensagem.equals("NS"))
+				{
+					
+					c.numeroSorteado.setText(entrada.nextLine().toString());
+					
+				}else if (mensagem.equals("I"))
+				{
+					ji = new JogoIniciado(servidor);
+					j.setVisible(false);
+				}
+				
+					
+			}
+		}
+		catch (IOException e)
+		{
+			//e.getMessage();
+		}
+	}
+	
+	public boolean equals(Object obj)
+	{
+		if (obj == null)
+			return false;
+		
+		if (this == obj)
+			return true;
+		
+		if (this.getClass() != obj.getClass())
+			return false;
+		
+		Cliente c = (Cliente)obj;
+		
+		if (this.servidor != c.servidor)
+			return false;
+		
+		if (this.mensagem != c.mensagem)
+			return false;
+		
+		return true;		
+	}
+}

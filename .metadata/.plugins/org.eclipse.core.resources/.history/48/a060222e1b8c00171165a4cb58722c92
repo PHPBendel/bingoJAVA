@@ -1,0 +1,126 @@
+import java.io.*;
+import java.net.Socket;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+//import bd.daos.Bingo;
+//import bd.dbos.Bingos;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
+public class Calculadora extends JFrame {
+	protected static final long serialVersionUID = 1L;
+
+	protected JLabel labelEmail = new JLabel("E-mail:"), labelSenha = new JLabel("Senha:"),
+			lblNome = new JLabel("Nome");
+
+	protected JTextField txtEmail = new JTextField(20), txtSenha = new JPasswordField(20);
+
+	protected JButton btnEntrar = new JButton("Entrar"), btnCancela = new JButton("Cancela"),
+			btnCadastro = new JButton("Cadastre-se");
+	
+	
+
+	public Calculadora() {
+
+		super("Calculadora binária");
+		
+		
+
+		this.addWindowListener(new FechamentoDeJanela());
+
+		JPanel pnlLogin = new JPanel();
+		pnlLogin.setBorder(new EmptyBorder(20, 10, 10, 10));
+
+		GroupLayout layoutLogin = new GroupLayout(pnlLogin);
+
+		pnlLogin.setLayout(layoutLogin);
+
+		layoutLogin.setAutoCreateGaps(true);
+		layoutLogin.setAutoCreateContainerGaps(true);
+		layoutLogin.setHorizontalGroup(layoutLogin.createSequentialGroup()
+				.addGroup(layoutLogin.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(labelEmail)
+						.addComponent(labelSenha))
+				.addGroup(layoutLogin.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(txtEmail)
+						.addComponent(txtSenha)));
+
+		layoutLogin.setVerticalGroup(layoutLogin.createSequentialGroup()
+				.addGroup(layoutLogin.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(labelEmail)
+						.addComponent(txtEmail))
+				.addGroup(layoutLogin.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(labelSenha)
+						.addComponent(txtSenha)));
+
+		JPanel pnlBotoes = new MeuJPanel();
+		GroupLayout layoutBotoes = new GroupLayout(pnlBotoes);
+
+		pnlBotoes.setLayout(layoutBotoes);
+
+		btnCancela.addActionListener(new Sair());
+		
+		
+		layoutBotoes.setAutoCreateGaps(true);
+		layoutBotoes.setAutoCreateContainerGaps(true);
+		layoutBotoes.setHorizontalGroup(layoutBotoes.createSequentialGroup().addComponent(btnEntrar)
+				.addComponent(btnCancela).addComponent(btnCadastro));
+
+		layoutBotoes.setVerticalGroup(layoutBotoes.createSequentialGroup()
+				.addGroup(layoutBotoes.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(btnEntrar)
+						.addComponent(btnCancela).addComponent(btnCadastro)));
+
+		lblNome.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblVitorias.setFont(new Font("Tahoma", Font.BOLD, 14));
+		
+
+		Container cntForm = this.getContentPane();
+
+		cntForm.add(pnlLogin, BorderLayout.NORTH);
+		cntForm.add(pnlBotoes, BorderLayout.CENTER);
+		
+
+		this.setSize(300, 350);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		pnlBotoes.setFocusable(true);
+		pnlBotoes.requestFocusInWindow();
+
+	}
+
+	protected class MeuJPanel extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+
+		public MeuJPanel() {
+			super();
+
+		}
+	}
+
+		protected class Sair implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				//new CarregarVencedores().vencedores();		
+				System.exit(0);
+				
+				
+				
+			}
+		}
+
+		protected class FechamentoDeJanela extends WindowAdapter {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+
+			}
+		}
+	
+	}

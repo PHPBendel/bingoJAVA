@@ -1,0 +1,136 @@
+import java.io.PrintStream;
+import java.util.Vector;
+import bd.daos.*;
+
+public class Jogo extends Thread {
+	private Vector<Cuidadora> cuidadoras = new Vector<Cuidadora>();
+	private Vector<Jogador> jogadores = new Vector<Jogador>();
+	private Vector<Integer> numerosSorteados = new Vector<Integer>();
+	private int numeroSorteado;
+	private boolean comecou = false;
+	private boolean terminou = false;
+
+	public void receba(Jogador j, Cuidadora c) throws Exception {
+		if (j == null)
+			throw new Exception("Jogador ausente");
+
+		if (c == null)
+			throw new Exception("Cuidadora ausente");
+
+		this.jogadores.addElement(j);
+		this.cuidadoras.addElement(c);
+
+	}
+
+	public boolean iniciado() {
+		return this.comecou;
+	}
+
+	public boolean terminou() {
+		return this.terminou;
+	}
+
+	public void termine(Jogador j) throws Exception {
+
+		if (numerosSorteados.size() > 23) {
+			Jogador jogador = j;
+			Vector<Integer> cartela = jogador.getCartela();
+
+			for (int i = 0; i < cartela.size(); i++) {
+				if (!numerosSorteados.contains(cartela.get(i)))
+					throw new Exception("Jogador não possui todos números sorteados");
+			}
+
+			this.terminou = true;
+
+			j.TRANSMISSOR.println("Parabéns, você ganhou!");
+
+			try {
+				new Bingo().mudarVitorias(jogador.getEmail(), jogador.getVitorias() + 1);
+
+			} catch (Exception e) {
+				e.getMessage();
+			}
+
+			for (int i = 0; i < jogadores.size(); i++) {
+				jogador = jogadores.get(i);
+
+				jogador.TRANSMISSOR.println("FJ");
+			}
+
+			for (int i = 0; i< cuidadoras.size(); i++)
+			{
+				Cuidadora cuidadora = cuidadoras.get(i);
+				
+				cuidadora.parar();
+			}
+			
+			
+		} else
+			throw new Exception("Aguarde seus números serem sorteados.");
+		// validar cartela do suposto ganhador
+		// mandar para todos os jogadores da Lista aviso de que o jogo acabou
+		// parar todas as Cuidadoras
+
+	}
+
+	public synchronized void run() {
+
+		while (jogadores.size() < 1) {
+			try {
+				this.sleep(10000); // 10 segundos
+
+			} catch (Exception e) {
+
+				e.getMessage();
+
+			}
+		}
+
+		try {
+			this.sleep(10000); // 10 segundos
+
+		} catch (Exception e) {
+
+			e.getMessage();
+
+		}
+
+		this.comecou = true;
+
+		while (terminou == false) {
+
+			if (jogadores.size() < 1)			
+				this.parar();
+			  
+			
+		
+			numeroSorteado = (int) ((Math.random() * 99) + 1);
+
+			if (!numerosSorteados.contains(numeroSorteado)) {
+
+				numerosSorteados.add(numeroSorteado);
+
+				for (int i = 0; i <= cuidadoras.size() - 1; i++) {
+
+					cuidadoras.get(i).enviarNumeroSorteado(numeroSorteado);
+				}
+
+				try {
+					this.sleep(1000); // 3 segundos
+				} catch (Exception e) {
+					e.getMessage();
+				}
+			}
+			if (numerosSorteados.size() == 95) {
+
+				terminou = true;
+			}
+		}
+	}
+	
+	public void parar(){
+		this.comecou = false;
+		this.terminou = true;
+	}
+}

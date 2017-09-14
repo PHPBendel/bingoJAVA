@@ -1,0 +1,23 @@
+INDEX VERSION 1.129+C:\Users\Pedro\Desktop\Bingo\.metadata\.plugins\org.eclipse.jdt.core
+4229648851.index
+2521783677.index
+1028420908.index
+3554032198.index
+589541979.index
+1762489263.index
+3919325409.index
+2422426042.index
+1078194832.index
+2247404230.index
+3668611592.index
+4194509408.index
+3208752909.index
+3125979650.index
+1085796001.index
+806556397.index
+914924236.index
+363738115.index
+3244704807.index
+2475401368.index
+4137163996.index
+1510137023.index
